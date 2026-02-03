@@ -3,47 +3,50 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game Sadece Soru Alanı</title>
+    <title>Quiz Game Final Box</title>
     <style>
         :root { --tiktok-pink: #ff0050; --tiktok-cyan: #00f2ea; --gold: #fdcb6e; --green: #2ecc71; }
         body { margin: 0; padding: 0; background: #121212; color: white; font-family: 'Arial Black', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
         
-        /* Sabit Üst Kısım */
+        /* Sabit Paneller */
         .header { margin-top: 20px; text-align: center; }
         .player-name { font-size: 24px; color: var(--tiktok-cyan); text-shadow: 0 0 10px var(--tiktok-cyan); }
-
         .game-container { display: flex; width: 95%; margin-top: 15px; justify-content: space-between; align-items: flex-start; }
-
-        /* Sabit Sol Rehber */
         .gift-guide { width: 75px; background: rgba(255,255,255,0.05); padding: 10px 0; border-radius: 15px; border: 2px solid var(--gold); }
         .guide-item { padding: 8px 0; display: flex; flex-direction: column; align-items: center; }
         .guide-divider { height: 1px; width: 70%; background: rgba(253, 203, 110, 0.4); margin: 0 auto; }
-        .guide-item span { font-size: 20px; }
 
-        /* --- DEĞİŞEN DİNAMİK ALAN (SARI OKLA İŞARETLENEN YER) --- */
+        /* --- SARI OKLU DİNAMİK KUTU --- */
         .question-box { 
             flex: 1; margin-left: 10px; min-height: 280px;
-            background: rgba(0, 0, 0, 0.8); padding: 15px; border-radius: 15px; 
-            border: 3px solid var(--gold); /* Senin sarı çerçeven */
-            position: relative; display: flex; flex-direction: column; justify-content: center;
+            background: rgba(0, 0, 0, 0.9); padding: 15px; border-radius: 15px; 
+            border: 3px solid var(--gold); position: relative;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        /* 15 Saniyelik Zaman Barı */
-        .timer-bar { position: absolute; top: 0; left: 0; height: 6px; background: var(--tiktok-cyan); width: 100%; border-radius: 15px 15px 0 0; }
+        /* KUTU İÇİ 3D LOGO */
+        .box-logo {
+            width: 100px; height: 100px; background: radial-gradient(circle, var(--gold), #b8860b);
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: black; font-size: 18px; border: 4px solid white;
+            animation: boxRotate 3s infinite linear; box-shadow: 0 0 20px var(--gold);
+        }
+        @keyframes boxRotate { from {transform: rotateY(0deg);} to {transform: rotateY(360deg);} }
 
-        /* Soru ve Şıklar Görünümü */
-        #q-content { display: block; }
-        #q-text { font-size: 17px; margin-bottom: 12px; text-align: left; line-height: 1.4; }
+        /* Soru ve Şıklar (Başladığında Görünür) */
+        #q-content { display: none; width: 100%; }
+        #q-text { font-size: 17px; margin-bottom: 12px; text-align: left; }
         .option { background: rgba(255,255,255,0.08); margin-bottom: 6px; padding: 10px; border-radius: 8px; text-align: left; font-size: 15px; border-left: 5px solid var(--gold); }
-        
-        /* Doğru Cevap Yanıp Sönme */
         .option.correct { background: var(--green) !important; animation: blink 0.5s step-end infinite alternate; }
         @keyframes blink { 50% { opacity: 0.4; } }
 
-        /* Geri Sayım ve Sonuç Yazıları (Sadece kutu içinde) */
-        #box-overlay { display: none; font-size: 40px; text-align: center; color: var(--tiktok-cyan); }
+        /* Zaman Barı */
+        .timer-bar { position: absolute; top: 0; left: 0; height: 6px; background: var(--tiktok-cyan); width: 0%; border-radius: 15px 15px 0 0; }
 
-        /* --- SABİT ALT KISIMLAR --- */
+        /* Overlay Mesajları (3-2-1, Şampiyon vb.) */
+        #box-msg { display: block; font-size: 20px; text-align: center; margin-top: 15px; }
+
+        /* Sabit Alt Paneller */
         .entry-info { width: 90%; margin-top: 15px; padding: 10px 0; background: rgba(255, 0, 80, 0.15); border-radius: 10px; border: 1px solid var(--tiktok-pink); font-size: 16px; color: var(--gold); text-align: center; }
         .winners-panel { width: 90%; margin-top: 10px; background: rgba(108, 92, 231, 0.2); padding: 10px; border-radius: 12px; border: 1px solid #6c5ce7; }
         .winners-grid { display: grid; grid-template-columns: 1fr 1fr; font-size: 12px; gap: 4px; }
@@ -67,8 +70,13 @@
         <div class="question-box" id="main-box">
             <div class="timer-bar" id="timer"></div>
             
+            <div id="box-ui">
+                <div class="box-logo" id="logo-icon">QUIZ</div>
+                <div id="box-msg">YARIŞMACI BEKLENİYOR...</div>
+            </div>
+
             <div id="q-content">
-                <div id="q-text">Soru buraya gelecek...</div>
+                <div id="q-text">Soru Yükleniyor...</div>
                 <div id="options">
                     <div class="option" id="opt-A">A) Seçenek 1</div>
                     <div class="option" id="opt-B">B) Seçenek 2</div>
@@ -76,8 +84,6 @@
                     <div class="option" id="opt-D">D) Seçenek 4</div>
                 </div>
             </div>
-
-            <div id="box-overlay">3</div>
         </div>
     </div>
 
@@ -90,22 +96,23 @@
     <script src="/socket.io/socket.io.js"></script>
     <script>
         const socket = io();
+        const boxUI = document.getElementById('box-ui');
         const qContent = document.getElementById('q-content');
-        const overlay = document.getElementById('box-overlay');
+        const boxMsg = document.getElementById('box-msg');
         const timerBar = document.getElementById('timer');
 
-        // Geri sayım ve geçiş animasyonu (Kutu içinde)
+        // Geri Sayım ve Başlama
         socket.on('startCountdown', () => {
             qContent.style.display = 'none';
-            overlay.style.display = 'block';
+            boxUI.style.display = 'flex';
             let count = 3;
-            overlay.innerText = count;
+            boxMsg.innerHTML = "YARIŞMA BAŞLIYOR!<br><span style='font-size:40px; color:var(--tiktok-cyan)'>" + count + "</span>";
             const timer = setInterval(() => {
                 count--;
-                if(count > 0) overlay.innerText = count;
+                if(count > 0) boxMsg.innerHTML = "YARIŞMA BAŞLIYOR!<br><span style='font-size:40px; color:var(--tiktok-cyan)'>" + count + "</span>";
                 else {
                     clearInterval(timer);
-                    overlay.style.display = 'none';
+                    boxUI.style.display = 'none';
                     qContent.style.display = 'block';
                 }
             }, 1000);
@@ -118,7 +125,6 @@
             document.getElementById('opt-C').innerText = "C) " + data.opts.C;
             document.getElementById('opt-D').innerText = "D) " + data.opts.D;
             
-            // Yeşilleri temizle, barı sıfırla
             document.querySelectorAll('.option').forEach(el => el.classList.remove('correct'));
             timerBar.style.transition = 'none';
             timerBar.style.width = '100%';
@@ -128,17 +134,20 @@
             }, 50);
         });
 
-        // Doğru şıkkı yeşil yak
         socket.on('revealAnswer', (correctLetter) => {
             document.getElementById('opt-' + correctLetter).classList.add('correct');
         });
 
-        // Kutu içinde Şampiyon/Üzgünüm yazısı
         socket.on('showBoxResult', (data) => {
             qContent.style.display = 'none';
-            overlay.style.display = 'block';
-            overlay.style.fontSize = '24px';
-            overlay.innerHTML = data.score >= 7 ? "🎉 ŞAMPİYON!<br>100 Beğeni Yolda" : "😔 ÜZGÜNÜM<br>Tekrar Dene";
+            boxUI.style.display = 'flex';
+            boxMsg.innerHTML = data.score >= 7 ? "🎉 ŞAMPİYON!<br>Beğeniler Yolda" : "😔 ÜZGÜNÜM<br>Tekrar Dene";
+        });
+
+        socket.on('waitingMode', () => {
+            qContent.style.display = 'none';
+            boxUI.style.display = 'flex';
+            boxMsg.innerText = "YARIŞMACI BEKLENİYOR...";
         });
     </script>
 </body>
