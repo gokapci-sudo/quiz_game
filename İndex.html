@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <style>
+        body { margin: 0; background: transparent; color: white; font-family: 'Arial', sans-serif; text-align: center; text-shadow: 2px 2px 4px #000; overflow: hidden; }
+        #waiting { display: block; padding-top: 100px; }
+        #game { display: none; padding-top: 50px; }
+        
+        .logo-3d { 
+            width: 150px; height: 150px; margin: 0 auto; background: gold; border-radius: 50%;
+            display: flex; align-items: center; justify-content: center; color: black; font-weight: bold;
+            animation: rotateY 3s infinite linear; border: 5px solid white; box-shadow: 0 0 30px gold;
+        }
+        @keyframes rotateY { from {transform: rotateY(0deg);} to {transform: rotateY(360deg);} }
+
+        .player-header { font-size: 30px; color: #00ffcc; margin-bottom: 20px; }
+        .question-box { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; border: 2px solid white; display: inline-block; min-width: 500px; }
+        .winners-box { position: absolute; top: 10; right: 10; background: rgba(0,0,0,0.5); padding: 10px; width: 200px; border-radius: 10px; text-align: left; }
+        .footer { position: fixed; bottom: 20px; width: 100%; font-size: 24px; color: #ffeb3b; }
+    </style>
+</head>
+<body>
+
+    <div id="waiting">
+        <div class="logo-3d">QUIZ GAME</div>
+        <h1>Bir Sonraki Yarışmacı Bekleniyor...</h1>
+    </div>
+
+    <div id="game">
+        <div class="player-header" id="p-name">Yarışmacı: ---</div>
+        <div class="question-box">
+            <h2 id="q-text">Soru Yükleniyor...</h2>
+            <div id="options" style="font-size: 20px;"></div>
+            <hr>
+            <div id="score">Doğru Sayısı: 0</div>
+        </div>
+    </div>
+
+    <div class="winners-box">
+        <div style="font-weight: bold; border-bottom: 1px solid white;">🏆 KAZANANLAR</div>
+        <div id="winners-list"></div>
+    </div>
+
+    <div class="footer">Katılmak için 🍵 Çay Gönder! (Ödül: 100 Beğeni)</div>
+
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        socket.on('waitingMode', () => { document.getElementById('waiting').style.display='block'; document.getElementById('game').style.display='none'; });
+        socket.on('gameStarted', (data) => { 
+            document.getElementById('waiting').style.display='none'; 
+            document.getElementById('game').style.display='block';
+            document.getElementById('p-name').innerText = "Yarışmacı: " + data.name;
+        });
+        socket.on('nextQuestion', (data) => {
+            document.getElementById('q-text').innerText = data.num + ") " + data.text;
+            document.getElementById('score').innerText = "Doğru Sayısı: " + data.score;
+            document.getElementById('options').innerHTML = Object.entries(data.opts).map(([gift, val]) => `<div>${gift} 👉 ${val}</div>`).join('');
+        });
+        socket.on('updateWinners', (list) => {
+            document.getElementById('winners-list').innerHTML = list.map(name => `<div>• ${name}</div>`).join('');
+        });
+    </script>
+</body>
+</html>
