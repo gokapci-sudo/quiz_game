@@ -2,108 +2,117 @@
 <html lang="tr">
 <head>
     <meta charset="UTF-8">
-    <title>Quiz Game Tasarım Önizleme</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Game Mobile v2</title>
     <style>
-        /* Tasarımı biraz daha TikTok estetiğine yaklaştırdım (Neon etkileri) */
+        :root {
+            --tiktok-pink: #ff0050;
+            --tiktok-cyan: #00f2ea;
+            --gold: #fdcb6e;
+        }
+
         body { 
-            margin: 0; 
-            background: #121212; /* GitHub'da görmek için koyu arka plan (Normalde transparent olacak) */
+            margin: 0; padding: 0;
+            background: #121212; /* OBS'de 'transparent' yapın */
             color: white; 
             font-family: 'Arial Black', sans-serif; 
-            text-align: center; 
-            overflow: hidden; 
-        }
-        
-        /* Yarışma Ekranı (Varsayılan Açık) */
-        #game { display: block; padding-top: 50px; }
-        #waiting { display: none; } /* Bekleme ekranı geçici olarak gizli */
-        
-        .player-header { 
-            font-size: 35px; 
-            color: #00f2ea; /* TikTok Turkuazı */
-            text-shadow: 0 0 10px #00f2ea;
-            margin-bottom: 20px; 
+            display: flex; flex-direction: column; align-items: center;
+            height: 100vh; overflow: hidden;
         }
 
-        .question-box { 
-            background: rgba(0, 0, 0, 0.8); 
-            padding: 30px; 
-            border-radius: 25px; 
-            border: 4px solid #ff0050; /* TikTok Pembesi */
-            display: inline-block; 
-            min-width: 600px;
-            box-shadow: 0 0 20px rgba(255, 0, 80, 0.5);
+        /* Üst Panel: Yarışmacı */
+        .header { margin-top: 30px; text-align: center; }
+        .player-name { 
+            font-size: 26px; color: var(--tiktok-cyan);
+            text-shadow: 0 0 10px var(--tiktok-cyan);
         }
 
-        #q-text { font-size: 28px; margin-bottom: 20px; }
-
-        .option-item {
-            background: rgba(255, 255, 255, 0.1);
-            margin: 10px auto;
-            padding: 15px;
-            border-radius: 10px;
-            width: 80%;
-            border-left: 10px solid gold;
-            text-align: left;
-            font-size: 22px;
+        /* Ana Oyun Alanı */
+        .game-container {
+            display: flex; width: 95%; margin-top: 20px;
+            justify-content: space-between; align-items: flex-start;
         }
 
-        .winners-box { 
-            position: absolute; 
-            top: 20px; 
-            right: 20px; 
-            background: rgba(108, 92, 231, 0.4); 
-            padding: 15px; 
-            width: 220px; 
-            border-radius: 15px; 
-            border: 1px solid white;
-            text-align: left;
+        /* Sol: Hediye Rehberi (A=Rose vb.) */
+        .gift-guide {
+            width: 70px; background: rgba(255,255,255,0.1);
+            padding: 10px 5px; border-radius: 12px;
+            border: 1px solid var(--gold); font-size: 14px;
+        }
+        .guide-item { margin-bottom: 10px; display: flex; flex-direction: column; align-items: center; }
+        .guide-item span { font-size: 18px; }
+
+        /* Sağ: Soru ve Şıklar */
+        .question-box {
+            flex: 1; margin-left: 10px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px; border-radius: 15px;
+            border: 2px solid var(--tiktok-pink);
+        }
+        #q-text { font-size: 18px; margin-bottom: 15px; text-align: left; line-height: 1.3; }
+
+        .option {
+            background: rgba(255,255,255,0.08); margin-bottom: 8px;
+            padding: 10px; border-radius: 8px; text-align: left;
+            font-size: 16px; border-left: 5px solid var(--gold);
         }
 
-        .winners-box div { margin-bottom: 5px; font-size: 16px; }
-
-        .footer { 
-            position: fixed; 
-            bottom: 30px; 
-            width: 100%; 
-            font-size: 28px; 
-            color: #fdcb6e; 
-            animation: pulse 1.5s infinite;
+        /* Alt Panel: Kazananlar Listesi */
+        .winners-panel {
+            width: 90%; margin-top: 15px;
+            background: rgba(108, 92, 231, 0.2);
+            padding: 10px; border-radius: 12px; border: 1px solid #6c5ce7;
         }
+        .winners-grid { display: grid; grid-template-columns: 1fr 1fr; font-size: 12px; gap: 5px; }
 
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
+        /* En Alt: Katılım Bilgisi */
+        .footer-info {
+            position: fixed; bottom: 15px; width: 100%;
+            background: rgba(0,0,0,0.7); padding: 8px 0;
+            font-size: 18px; color: var(--gold);
         }
+        .tea-icon { color: #8d6e63; font-size: 22px; } /* Çay Rengi */
+
+        #score-bar { color: #00ffcc; font-size: 16px; margin-top: 10px; }
     </style>
 </head>
 <body>
 
-    <div id="game">
-        <div class="player-header">Yarışmacı: ÖRNEK_KULLANICI</div>
-        
+    <div class="header">
+        <div class="player-name">👤 Yarışmacı: ÖRNEK_USER</div>
+        <div id="score-bar">Puan: 5 / 10</div>
+    </div>
+
+    <div class="game-container">
+        <div class="gift-guide">
+            <div class="guide-item"><span>🌹</span> A</div>
+            <div class="guide-item"><span>💖</span> B</div>
+            <div class="guide-item"><span>🍦</span> C</div>
+            <div class="guide-item"><span>⚡</span> D</div>
+        </div>
+
         <div class="question-box">
-            <div id="q-text">1) Türkiye'nin en yüksek dağı hangisidir?</div>
+            <div id="q-text">Hangi okyanus dünyanın en büyük okyanusudur?</div>
             <div id="options">
-                <div class="option-item">🌹 Rose 👉 Ağrı Dağı</div>
-                <div class="option-item">💖 Finger Heart 👉 Erciyes Dağı</div>
-                <div class="option-item">🍦 Ice Cream 👉 Uludağ</div>
+                <div class="option">A) Pasifik Okyanusu</div>
+                <div class="option">B) Atlas Okyanusu</div>
+                <div class="option">C) Hint Okyanusu</div>
+                <div class="option">D) Arktik Okyanusu</div>
             </div>
-            <hr style="margin: 20px 0; opacity: 0.3;">
-            <div id="score" style="font-size: 24px; color: gold;">Doğru Sayısı: 5 / 10</div>
         </div>
     </div>
 
-    <div class="winners-box">
-        <div style="font-weight: bold; border-bottom: 2px solid white; margin-bottom: 10px; color: gold;">🏆 GÜNÜN KAZANANLARI</div>
-        <div>1. Ahmet_01</div>
-        <div>2. Canan_Can</div>
-        <div>3. QuizMaster</div>
+    <div class="winners-panel">
+        <div style="font-size: 13px; color: var(--gold); margin-bottom: 5px;">🏆 GÜNÜN KAZANANLARI (7+ Doğru)</div>
+        <div class="winners-grid">
+            <div>1. Ahmet_Bey</div> <div>2. Canan_X</div>
+            <div>3. Mert_44</div> <div>4. Elif_99</div>
+        </div>
     </div>
 
-    <div class="footer">
-        Katılmak için 🍵 (Çay) Gönder!
+    <div class="footer-info">
+        50 <span class="tea-icon">🍵</span> (Çay) Gönder ve Yarış!
+        <div style="font-size: 12px; margin-top: 3px;">Ödül: Son Gönderiye 100 Beğeni ❤️</div>
     </div>
 
 </body>
