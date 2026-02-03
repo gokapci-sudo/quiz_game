@@ -3,88 +3,143 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game Mobile v3</title>
+    <title>Quiz Game Sadece Soru Alanı</title>
     <style>
-        :root { --tiktok-pink: #ff0050; --tiktok-cyan: #00f2ea; --gold: #fdcb6e; }
+        :root { --tiktok-pink: #ff0050; --tiktok-cyan: #00f2ea; --gold: #fdcb6e; --green: #2ecc71; }
         body { margin: 0; padding: 0; background: #121212; color: white; font-family: 'Arial Black', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
         
-        /* Üst Panel: Yarışmacı */
+        /* Sabit Üst Kısım */
         .header { margin-top: 20px; text-align: center; }
         .player-name { font-size: 24px; color: var(--tiktok-cyan); text-shadow: 0 0 10px var(--tiktok-cyan); }
 
-        /* Ana Oyun Alanı */
         .game-container { display: flex; width: 95%; margin-top: 15px; justify-content: space-between; align-items: flex-start; }
 
-        /* Sol: Hediye Rehberi */
-        .gift-guide {
-            width: 75px; background: rgba(255,255,255,0.05);
-            padding: 10px 0; border-radius: 15px;
-            border: 2px solid var(--gold); font-size: 14px;
-        }
+        /* Sabit Sol Rehber */
+        .gift-guide { width: 75px; background: rgba(255,255,255,0.05); padding: 10px 0; border-radius: 15px; border: 2px solid var(--gold); }
         .guide-item { padding: 8px 0; display: flex; flex-direction: column; align-items: center; }
         .guide-divider { height: 1px; width: 70%; background: rgba(253, 203, 110, 0.4); margin: 0 auto; }
-        .guide-item span { font-size: 20px; margin-bottom: 2px; }
+        .guide-item span { font-size: 20px; }
 
-        /* Sağ: Soru Kutusu */
-        .question-box { flex: 1; margin-left: 10px; background: rgba(0, 0, 0, 0.8); padding: 15px; border-radius: 15px; border: 2px solid var(--tiktok-pink); }
-        #q-text { font-size: 17px; margin-bottom: 12px; text-align: left; line-height: 1.4; }
-        .option { background: rgba(255,255,255,0.08); margin-bottom: 6px; padding: 10px; border-radius: 8px; text-align: left; font-size: 15px; border-left: 5px solid var(--gold); }
-
-        /* YENİ: Giriş ve Ödül Bilgisi (Soru ve Liste Arasında) */
-        .entry-info {
-            width: 90%; margin-top: 15px; padding: 10px 0;
-            background: rgba(255, 0, 80, 0.15); /* Hafif pembe vurgu */
-            border-radius: 10px; border: 1px solid var(--tiktok-pink);
-            font-size: 16px; color: var(--gold);
+        /* --- DEĞİŞEN DİNAMİK ALAN (SARI OKLA İŞARETLENEN YER) --- */
+        .question-box { 
+            flex: 1; margin-left: 10px; min-height: 280px;
+            background: rgba(0, 0, 0, 0.8); padding: 15px; border-radius: 15px; 
+            border: 3px solid var(--gold); /* Senin sarı çerçeven */
+            position: relative; display: flex; flex-direction: column; justify-content: center;
         }
 
-        /* Alt Panel: Kazananlar Listesi */
+        /* 15 Saniyelik Zaman Barı */
+        .timer-bar { position: absolute; top: 0; left: 0; height: 6px; background: var(--tiktok-cyan); width: 100%; border-radius: 15px 15px 0 0; }
+
+        /* Soru ve Şıklar Görünümü */
+        #q-content { display: block; }
+        #q-text { font-size: 17px; margin-bottom: 12px; text-align: left; line-height: 1.4; }
+        .option { background: rgba(255,255,255,0.08); margin-bottom: 6px; padding: 10px; border-radius: 8px; text-align: left; font-size: 15px; border-left: 5px solid var(--gold); }
+        
+        /* Doğru Cevap Yanıp Sönme */
+        .option.correct { background: var(--green) !important; animation: blink 0.5s step-end infinite alternate; }
+        @keyframes blink { 50% { opacity: 0.4; } }
+
+        /* Geri Sayım ve Sonuç Yazıları (Sadece kutu içinde) */
+        #box-overlay { display: none; font-size: 40px; text-align: center; color: var(--tiktok-cyan); }
+
+        /* --- SABİT ALT KISIMLAR --- */
+        .entry-info { width: 90%; margin-top: 15px; padding: 10px 0; background: rgba(255, 0, 80, 0.15); border-radius: 10px; border: 1px solid var(--tiktok-pink); font-size: 16px; color: var(--gold); text-align: center; }
         .winners-panel { width: 90%; margin-top: 10px; background: rgba(108, 92, 231, 0.2); padding: 10px; border-radius: 12px; border: 1px solid #6c5ce7; }
         .winners-grid { display: grid; grid-template-columns: 1fr 1fr; font-size: 12px; gap: 4px; }
-        
-        #score-bar { color: #00ffcc; font-size: 14px; margin-top: 5px; }
     </style>
 </head>
 <body>
 
     <div class="header">
-        <div class="player-name" id="p-name">👤 Yarışmacı: ÖRNEK_USER</div>
-        <div id="score-bar">Doğru: 5 / 10</div>
+        <div class="player-name" id="p-name">👤 Yarışmacı: BEKLENİYOR</div>
+        <div id="score-bar" style="color:#00ffcc; font-size:14px; margin-top:5px;">Doğru: 0 / 10</div>
     </div>
 
     <div class="game-container">
         <div class="gift-guide">
-            <div class="guide-item"><span>🌹</span> A</div>
-            <div class="guide-divider"></div>
-            <div class="guide-item"><span>💖</span> B</div>
-            <div class="guide-divider"></div>
-            <div class="guide-item"><span>🍦</span> C</div>
-            <div class="guide-divider"></div>
+            <div class="guide-item"><span>🌹</span> A</div><div class="guide-divider"></div>
+            <div class="guide-item"><span>💖</span> B</div><div class="guide-divider"></div>
+            <div class="guide-item"><span>🍦</span> C</div><div class="guide-divider"></div>
             <div class="guide-item"><span>⚡</span> D</div>
         </div>
 
-        <div class="question-box">
-            <div id="q-text">Hangi okyanus dünyanın en büyük okyanusudur?</div>
-            <div id="options">
-                <div class="option">A) Pasifik Okyanusu</div>
-                <div class="option">B) Atlas Okyanusu</div>
-                <div class="option">C) Hint Okyanusu</div>
-                <div class="option">D) Arktik Okyanusu</div>
+        <div class="question-box" id="main-box">
+            <div class="timer-bar" id="timer"></div>
+            
+            <div id="q-content">
+                <div id="q-text">Soru buraya gelecek...</div>
+                <div id="options">
+                    <div class="option" id="opt-A">A) Seçenek 1</div>
+                    <div class="option" id="opt-B">B) Seçenek 2</div>
+                    <div class="option" id="opt-C">C) Seçenek 3</div>
+                    <div class="option" id="opt-D">D) Seçenek 4</div>
+                </div>
             </div>
+
+            <div id="box-overlay">3</div>
         </div>
     </div>
 
-    <div class="entry-info">
-        🍵 = GİRİŞ (50) | Ödül: Son Gönderiye 100 Beğeni ❤️
-    </div>
-
+    <div class="entry-info">🍵 = GİRİŞ (50) | Ödül: Son Gönderiye 100 Beğeni ❤️</div>
     <div class="winners-panel">
         <div style="font-size: 12px; color: var(--gold); margin-bottom: 5px; font-weight: bold;">🏆 GÜNÜN KAZANANLARI (7+)</div>
-        <div class="winners-grid" id="winners-list">
-            <div>1. Ahmet_01</div> <div>2. Canan_X</div>
-            <div>3. Mert_44</div> <div>4. Elif_99</div>
-        </div>
+        <div class="winners-grid" id="winners-list"></div>
     </div>
 
+    <script src="/socket.io/socket.io.js"></script>
+    <script>
+        const socket = io();
+        const qContent = document.getElementById('q-content');
+        const overlay = document.getElementById('box-overlay');
+        const timerBar = document.getElementById('timer');
+
+        // Geri sayım ve geçiş animasyonu (Kutu içinde)
+        socket.on('startCountdown', () => {
+            qContent.style.display = 'none';
+            overlay.style.display = 'block';
+            let count = 3;
+            overlay.innerText = count;
+            const timer = setInterval(() => {
+                count--;
+                if(count > 0) overlay.innerText = count;
+                else {
+                    clearInterval(timer);
+                    overlay.style.display = 'none';
+                    qContent.style.display = 'block';
+                }
+            }, 1000);
+        });
+
+        socket.on('nextQuestion', (data) => {
+            document.getElementById('q-text').innerText = data.num + ") " + data.text;
+            document.getElementById('opt-A').innerText = "A) " + data.opts.A;
+            document.getElementById('opt-B').innerText = "B) " + data.opts.B;
+            document.getElementById('opt-C').innerText = "C) " + data.opts.C;
+            document.getElementById('opt-D').innerText = "D) " + data.opts.D;
+            
+            // Yeşilleri temizle, barı sıfırla
+            document.querySelectorAll('.option').forEach(el => el.classList.remove('correct'));
+            timerBar.style.transition = 'none';
+            timerBar.style.width = '100%';
+            setTimeout(() => {
+                timerBar.style.transition = 'width 15s linear';
+                timerBar.style.width = '0%';
+            }, 50);
+        });
+
+        // Doğru şıkkı yeşil yak
+        socket.on('revealAnswer', (correctLetter) => {
+            document.getElementById('opt-' + correctLetter).classList.add('correct');
+        });
+
+        // Kutu içinde Şampiyon/Üzgünüm yazısı
+        socket.on('showBoxResult', (data) => {
+            qContent.style.display = 'none';
+            overlay.style.display = 'block';
+            overlay.style.fontSize = '24px';
+            overlay.innerHTML = data.score >= 7 ? "🎉 ŞAMPİYON!<br>100 Beğeni Yolda" : "😔 ÜZGÜNÜM<br>Tekrar Dene";
+        });
+    </script>
 </body>
 </html>
