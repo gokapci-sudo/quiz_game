@@ -1,66 +1,110 @@
 <!DOCTYPE html>
-<html>
+<html lang="tr">
 <head>
     <meta charset="UTF-8">
+    <title>Quiz Game Tasarım Önizleme</title>
     <style>
-        body { margin: 0; background: transparent; color: white; font-family: 'Arial', sans-serif; text-align: center; text-shadow: 2px 2px 4px #000; overflow: hidden; }
-        #waiting { display: block; padding-top: 100px; }
-        #game { display: none; padding-top: 50px; }
-        
-        .logo-3d { 
-            width: 150px; height: 150px; margin: 0 auto; background: gold; border-radius: 50%;
-            display: flex; align-items: center; justify-content: center; color: black; font-weight: bold;
-            animation: rotateY 3s infinite linear; border: 5px solid white; box-shadow: 0 0 30px gold;
+        /* Tasarımı biraz daha TikTok estetiğine yaklaştırdım (Neon etkileri) */
+        body { 
+            margin: 0; 
+            background: #121212; /* GitHub'da görmek için koyu arka plan (Normalde transparent olacak) */
+            color: white; 
+            font-family: 'Arial Black', sans-serif; 
+            text-align: center; 
+            overflow: hidden; 
         }
-        @keyframes rotateY { from {transform: rotateY(0deg);} to {transform: rotateY(360deg);} }
+        
+        /* Yarışma Ekranı (Varsayılan Açık) */
+        #game { display: block; padding-top: 50px; }
+        #waiting { display: none; } /* Bekleme ekranı geçici olarak gizli */
+        
+        .player-header { 
+            font-size: 35px; 
+            color: #00f2ea; /* TikTok Turkuazı */
+            text-shadow: 0 0 10px #00f2ea;
+            margin-bottom: 20px; 
+        }
 
-        .player-header { font-size: 30px; color: #00ffcc; margin-bottom: 20px; }
-        .question-box { background: rgba(0,0,0,0.7); padding: 20px; border-radius: 15px; border: 2px solid white; display: inline-block; min-width: 500px; }
-        .winners-box { position: absolute; top: 10; right: 10; background: rgba(0,0,0,0.5); padding: 10px; width: 200px; border-radius: 10px; text-align: left; }
-        .footer { position: fixed; bottom: 20px; width: 100%; font-size: 24px; color: #ffeb3b; }
+        .question-box { 
+            background: rgba(0, 0, 0, 0.8); 
+            padding: 30px; 
+            border-radius: 25px; 
+            border: 4px solid #ff0050; /* TikTok Pembesi */
+            display: inline-block; 
+            min-width: 600px;
+            box-shadow: 0 0 20px rgba(255, 0, 80, 0.5);
+        }
+
+        #q-text { font-size: 28px; margin-bottom: 20px; }
+
+        .option-item {
+            background: rgba(255, 255, 255, 0.1);
+            margin: 10px auto;
+            padding: 15px;
+            border-radius: 10px;
+            width: 80%;
+            border-left: 10px solid gold;
+            text-align: left;
+            font-size: 22px;
+        }
+
+        .winners-box { 
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            background: rgba(108, 92, 231, 0.4); 
+            padding: 15px; 
+            width: 220px; 
+            border-radius: 15px; 
+            border: 1px solid white;
+            text-align: left;
+        }
+
+        .winners-box div { margin-bottom: 5px; font-size: 16px; }
+
+        .footer { 
+            position: fixed; 
+            bottom: 30px; 
+            width: 100%; 
+            font-size: 28px; 
+            color: #fdcb6e; 
+            animation: pulse 1.5s infinite;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
     </style>
 </head>
 <body>
 
-    <div id="waiting">
-        <div class="logo-3d">QUIZ GAME</div>
-        <h1>Bir Sonraki Yarışmacı Bekleniyor...</h1>
-    </div>
-
     <div id="game">
-        <div class="player-header" id="p-name">Yarışmacı: ---</div>
+        <div class="player-header">Yarışmacı: ÖRNEK_KULLANICI</div>
+        
         <div class="question-box">
-            <h2 id="q-text">Soru Yükleniyor...</h2>
-            <div id="options" style="font-size: 20px;"></div>
-            <hr>
-            <div id="score">Doğru Sayısı: 0</div>
+            <div id="q-text">1) Türkiye'nin en yüksek dağı hangisidir?</div>
+            <div id="options">
+                <div class="option-item">🌹 Rose 👉 Ağrı Dağı</div>
+                <div class="option-item">💖 Finger Heart 👉 Erciyes Dağı</div>
+                <div class="option-item">🍦 Ice Cream 👉 Uludağ</div>
+            </div>
+            <hr style="margin: 20px 0; opacity: 0.3;">
+            <div id="score" style="font-size: 24px; color: gold;">Doğru Sayısı: 5 / 10</div>
         </div>
     </div>
 
     <div class="winners-box">
-        <div style="font-weight: bold; border-bottom: 1px solid white;">🏆 KAZANANLAR</div>
-        <div id="winners-list"></div>
+        <div style="font-weight: bold; border-bottom: 2px solid white; margin-bottom: 10px; color: gold;">🏆 GÜNÜN KAZANANLARI</div>
+        <div>1. Ahmet_01</div>
+        <div>2. Canan_Can</div>
+        <div>3. QuizMaster</div>
     </div>
 
-    <div class="footer">Katılmak için 🍵 Çay Gönder! (Ödül: 100 Beğeni)</div>
+    <div class="footer">
+        Katılmak için 🍵 (Çay) Gönder!
+    </div>
 
-    <script src="/socket.io/socket.io.js"></script>
-    <script>
-        const socket = io();
-        socket.on('waitingMode', () => { document.getElementById('waiting').style.display='block'; document.getElementById('game').style.display='none'; });
-        socket.on('gameStarted', (data) => { 
-            document.getElementById('waiting').style.display='none'; 
-            document.getElementById('game').style.display='block';
-            document.getElementById('p-name').innerText = "Yarışmacı: " + data.name;
-        });
-        socket.on('nextQuestion', (data) => {
-            document.getElementById('q-text').innerText = data.num + ") " + data.text;
-            document.getElementById('score').innerText = "Doğru Sayısı: " + data.score;
-            document.getElementById('options').innerHTML = Object.entries(data.opts).map(([gift, val]) => `<div>${gift} 👉 ${val}</div>`).join('');
-        });
-        socket.on('updateWinners', (list) => {
-            document.getElementById('winners-list').innerHTML = list.map(name => `<div>• ${name}</div>`).join('');
-        });
-    </script>
 </body>
 </html>
