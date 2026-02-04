@@ -2,14 +2,13 @@ const express = require('express');
 const http = require('http');
 const { Server } = require('socket.io');
 const { WebcastPushConnection } = require('tiktok-live-connector');
-const readline = require('readline');
 const fs = require('fs');
 
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server);
 
-// --- VERİLERİ YÜKLE ---
+// --- VERİ YÜKLEME ---
 let questions = [];
 let winnersList = [];
 
@@ -21,8 +20,9 @@ function loadData() {
         if (fs.existsSync('./winners.json')) {
             winnersList = JSON.parse(fs.readFileSync('./winners.json', 'utf8'));
         }
+        console.log("SİSTEM: Veriler yüklendi. Soru:" + questions.length + " Kazanan:" + winnersList.length);
     } catch (err) {
-        console.error("Dosya okuma hatası:", err);
+        console.log("HATA: JSON dosyalarında yazım hatası var!");
     }
 }
 loadData();
@@ -43,7 +43,7 @@ const ENTRY_GIFT_ID = "5487";
 app.use(express.static(__dirname));
 
 let tiktokConn = new WebcastPushConnection(TIKTOK_USERNAME);
-tiktokConn.connect().then(() => console.log("Bağlantı Başarılı!")).catch(e => console.log("Hata."));
+tiktokConn.connect().then(() => console.log("TikTok Bağlantısı Başarılı!")).catch(e => console.log("Bağlantı Hatası."));
 
 tiktokConn.on('gift', (data) => {
     const giftId = data.giftId.toString();
@@ -116,6 +116,8 @@ function finishGame() {
     setTimeout(() => { startNewCycle(); }, 5000);
 }
 
-io.on('connection', (socket) => { socket.emit('updateWinners', winnersList); });
+io.on('connection', (socket) => {
+    socket.emit('updateWinners', winnersList);
+});
 
-server.listen(3000, () => { console.log('Sistem Aktif: http://localhost:3000'); });
+server.listen(3000, () => { console.log('SİSTEM HAZIR: http://localhost:3000'); });
