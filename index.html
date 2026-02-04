@@ -7,41 +7,26 @@
     <style>
         :root { --tiktok-pink: #ff0050; --tiktok-cyan: #00f2ea; --gold: #fdcb6e; --green: #2ecc71; }
         body { margin: 0; padding: 0; background: #121212; color: white; font-family: 'Arial Black', sans-serif; display: flex; flex-direction: column; align-items: center; height: 100vh; overflow: hidden; }
-        
         .header { margin-top: 20px; text-align: center; }
         .player-name { font-size: 24px; color: var(--tiktok-cyan); text-shadow: 0 0 10px var(--tiktok-cyan); }
         .game-container { display: flex; width: 95%; margin-top: 15px; justify-content: space-between; align-items: flex-start; }
         .gift-guide { width: 75px; background: rgba(255,255,255,0.05); padding: 10px 0; border-radius: 15px; border: 2px solid var(--gold); }
         .guide-item { padding: 8px 0; display: flex; flex-direction: column; align-items: center; }
-        .guide-item img { width: 35px; height: 35px; object-fit: contain; margin-bottom: 3px; }
-        .guide-divider { height: 1px; width: 70%; background: rgba(253, 203, 110, 0.4); margin: 0 auto; }
-
-        .question-box { 
-            flex: 1; margin-left: 10px; min-height: 280px;
-            background: rgba(0, 0, 0, 0.9); padding: 15px; border-radius: 15px; 
-            border: 3px solid var(--gold); position: relative;
-            display: flex; flex-direction: column; align-items: center; justify-content: center;
-        }
-
-        #box-ui { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; height: 100%; }
-        .box-logo-img { width: 110px; height: 110px; object-fit: contain; animation: boxRotate 3s infinite linear; filter: drop-shadow(0 0 10px var(--gold)); }
+        .guide-item img { width: 35px; height: 35px; object-fit: contain; }
+        .question-box { flex: 1; margin-left: 10px; min-height: 280px; background: rgba(0, 0, 0, 0.9); padding: 15px; border-radius: 15px; border: 3px solid var(--gold); position: relative; display: flex; flex-direction: column; align-items: center; justify-content: center; }
+        #box-ui { display: flex; flex-direction: column; align-items: center; }
+        .box-logo-img { width: 110px; height: 110px; animation: boxRotate 3s infinite linear; }
         @keyframes boxRotate { from {transform: rotateY(0deg);} to {transform: rotateY(360deg);} }
-
         #q-content { display: none; width: 100%; }
-        #q-text { font-size: 17px; margin-bottom: 12px; text-align: left; }
-        .option { background: rgba(255,255,255,0.08); margin-bottom: 6px; padding: 10px; border-radius: 8px; text-align: left; font-size: 15px; border-left: 5px solid var(--gold); }
-        .option.correct { background: var(--green) !important; animation: blink 0.5s step-end infinite alternate; }
-        @keyframes blink { 50% { opacity: 0.4; } }
-
-        .timer-bar { position: absolute; top: 0; left: 0; height: 6px; background: var(--tiktok-cyan); width: 0%; border-radius: 15px 15px 0 0; }
-        #box-msg { display: block; font-size: 18px; text-align: center; margin-top: 15px; color: white; }
-
-        .entry-info { width: 90%; margin-top: 15px; padding: 10px 0; background: rgba(255, 0, 80, 0.15); border-radius: 10px; border: 1px solid var(--tiktok-pink); font-size: 16px; color: var(--gold); text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
-        .entry-info img { width: 25px; height: 25px; object-fit: contain; }
+        .option { background: rgba(255,255,255,0.08); margin-bottom: 6px; padding: 10px; border-radius: 8px; border-left: 5px solid var(--gold); }
+        .option.correct { background: var(--green) !important; }
+        .timer-bar { position: absolute; top: 0; left: 0; height: 6px; background: var(--tiktok-cyan); width: 0%; }
+        .entry-info { width: 90%; margin-top: 15px; padding: 10px 0; background: rgba(255, 0, 80, 0.15); border-radius: 10px; border: 1px solid var(--tiktok-pink); color: var(--gold); text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .entry-info img { width: 25px; height: 25px; }
 
         /* KAZANANLAR BANDI - ÖDÜLÜN ALTINDA */
         .winners-panel { width: 90%; margin-top: 10px; background: rgba(108, 92, 231, 0.2); padding: 10px; border-radius: 12px; border: 1px solid #6c5ce7; overflow: hidden; white-space: nowrap; }
-        #winner-list { display: inline-block; padding-left: 100%; animation: ticker 25s linear infinite; font-size: 14px; color: var(--gold); }
+        #winner-list { display: inline-block; padding-left: 100%; animation: ticker 25s linear infinite; font-size: 16px; color: var(--gold); font-weight: bold; }
         @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
     </style>
 </head>
@@ -53,21 +38,18 @@
     <div class="game-container">
         <div class="gift-guide">
             <div class="guide-item"><img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp"> A</div>
-            <div class="guide-divider"></div>
             <div class="guide-item"><img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/802a21ae29f9fae5abe3693de9f874bd~tplv-obj.webp"> B</div>
-            <div class="guide-divider"></div>
             <div class="guide-item"><img src="https://p16-webcast.tiktokcdn.com/img/alisg/webcast-sg/resource/fc549cf1bc61f9c8a1c97ebab68dced7.png~tplv-obj.webp"> C</div>
-            <div class="guide-divider"></div>
             <div class="guide-item"><img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.webp"> D</div>
         </div>
         <div class="question-box">
             <div class="timer-bar" id="timer"></div>
             <div id="box-ui">
                 <img src="logo.png" class="box-logo-img">
-                <div id="box-msg">YARIŞMACI BEKLENİYOR...</div>
+                <div id="box-msg" style="margin-top:10px;">YARIŞMACI BEKLENİYOR...</div>
             </div>
             <div id="q-content">
-                <div id="q-text">Soru Yükleniyor...</div>
+                <div id="q-text" style="margin-bottom:10px;"></div>
                 <div id="options">
                     <div class="option" id="opt-A"></div><div class="option" id="opt-B"></div>
                     <div class="option" id="opt-C"></div><div class="option" id="opt-D"></div>
@@ -91,38 +73,30 @@
         const timerBar = document.getElementById('timer');
 
         socket.on('updateWinners', (winners) => {
-            if(winners.length > 0) document.getElementById('winner-list').innerHTML = "🏆 ŞAMPİYONLAR: " + winners.map(n => `⭐ ${n}`).join(' &nbsp;&nbsp; ');
+            if(winners && winners.length > 0) {
+                document.getElementById('winner-list').innerHTML = "🏆 ŞAMPİYONLAR: " + winners.map(n => `⭐ ${n}`).join(' &nbsp;&nbsp; ');
+            }
         });
+
         socket.on('startCountdown', (data) => {
             document.getElementById('p-name').innerText = "👤 Yarışmacı: " + data.name;
-            document.getElementById('score-bar').innerText = "Doğru: 0 / 10";
             qContent.style.display = 'none'; boxUI.style.display = 'flex';
-            let count = 3;
-            boxMsg.innerHTML = "BAŞLIYOR!<br><span style='font-size:40px; color:var(--tiktok-cyan)'>" + count + "</span>";
-            const itv = setInterval(() => {
-                count--;
-                if(count > 0) boxMsg.innerHTML = "BAŞLIYOR!<br><span style='font-size:40px; color:var(--tiktok-cyan)'>" + count + "</span>";
-                else { clearInterval(itv); boxUI.style.display = 'none'; qContent.style.display = 'block'; }
-            }, 1000);
+            let c = 3; boxMsg.innerHTML = "BAŞLIYOR!<br><span style='font-size:30px;'>" + c + "</span>";
+            const i = setInterval(() => { c--; if(c>0) boxMsg.innerHTML = "BAŞLIYOR!<br><span style='font-size:30px;'>" + c + "</span>"; else { clearInterval(i); boxUI.style.display='none'; qContent.style.display='block'; } }, 1000);
         });
+
         socket.on('nextQuestion', (data) => {
             document.getElementById('q-text').innerText = data.num + ") " + data.text;
-            ["A","B","C","D"].forEach(l => { document.getElementById('opt-'+l).innerText = l + ") " + data.opts[l]; });
+            ["A","B","C","D"].forEach(l => document.getElementById('opt-'+l).innerText = l + ") " + data.opts[l]);
             document.querySelectorAll('.option').forEach(el => el.classList.remove('correct'));
             timerBar.style.transition = 'none'; timerBar.style.width = '100%';
             setTimeout(() => { timerBar.style.transition = 'width 15s linear'; timerBar.style.width = '0%'; }, 50);
         });
-        socket.on('updateScore', (d) => { document.getElementById('score-bar').innerText = "Doğru: " + d.score + " / 10"; });
-        socket.on('revealAnswer', (l) => { document.getElementById('opt-'+l).classList.add('correct'); });
-        socket.on('showBoxResult', (d) => {
-            qContent.style.display = 'none'; boxUI.style.display = 'flex';
-            boxMsg.innerHTML = d.score >= 7 ? "🎉 ŞAMPİYON!" : "😔 ÜZGÜNÜM";
-        });
-        socket.on('waitingMode', () => {
-            document.getElementById('p-name').innerText = "👤 Yarışmacı: BEKLENİYOR";
-            qContent.style.display = 'none'; boxUI.style.display = 'flex';
-            boxMsg.innerText = "YARIŞMACI BEKLENİYOR...";
-        });
+
+        socket.on('updateScore', (d) => document.getElementById('score-bar').innerText = "Doğru: " + d.score + " / 10");
+        socket.on('revealAnswer', (l) => document.getElementById('opt-'+l).classList.add('correct'));
+        socket.on('showBoxResult', (d) => { qContent.style.display = 'none'; boxUI.style.display = 'flex'; boxMsg.innerHTML = d.score >= 7 ? "🎉 ŞAMPİYON!" : "😔 ÜZGÜNÜM"; });
+        socket.on('waitingMode', () => { document.getElementById('p-name').innerText = "👤 Yarışmacı: BEKLENİYOR"; qContent.style.display = 'none'; boxUI.style.display = 'flex'; boxMsg.innerText = "YARIŞMACI BEKLENİYOR..."; });
     </script>
 </body>
 </html>
