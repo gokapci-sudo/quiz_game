@@ -9,7 +9,7 @@ const server = http.createServer(app);
 const io = new Server(server);
 
 // --- AYARLAR ---
-const TIKTOK_USERNAME = "KULLANICI_ADINIZ"; // Kendi kullanıcı adını buraya yaz [cite: 2026-02-03]
+const TIKTOK_USERNAME = "quiz..game"; // Kendi kullanıcı adını buraya yaz [cite: 2026-02-03]
 const ENTRY_COST = 50; 
 let queue = [];
 let currentPlayer = null;
