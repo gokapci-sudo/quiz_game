@@ -24,27 +24,30 @@
             display: flex; flex-direction: column; align-items: center; justify-content: center;
         }
 
-        /* KUTU İÇİ 3D LOGO */
-        .box-logo {
-            width: 100px; height: 100px; background: radial-gradient(circle, var(--gold), #b8860b);
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: black; font-size: 18px; border: 4px solid white;
-            animation: boxRotate 3s infinite linear; box-shadow: 0 0 20px var(--gold);
+        /* LOGO ORTALAMA VE 3D EFEKT */
+        #box-ui {
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            width: 100%; height: 100%;
+        }
+
+        .box-logo-img {
+            width: 110px; height: 110px; 
+            object-fit: contain;
+            animation: boxRotate 3s infinite linear; 
+            filter: drop-shadow(0 0 10px var(--gold));
         }
         @keyframes boxRotate { from {transform: rotateY(0deg);} to {transform: rotateY(360deg);} }
 
-        /* Soru ve Şıklar (Başladığında Görünür) */
+        /* Soru ve Şıklar */
         #q-content { display: none; width: 100%; }
         #q-text { font-size: 17px; margin-bottom: 12px; text-align: left; }
         .option { background: rgba(255,255,255,0.08); margin-bottom: 6px; padding: 10px; border-radius: 8px; text-align: left; font-size: 15px; border-left: 5px solid var(--gold); }
         .option.correct { background: var(--green) !important; animation: blink 0.5s step-end infinite alternate; }
         @keyframes blink { 50% { opacity: 0.4; } }
 
-        /* Zaman Barı */
         .timer-bar { position: absolute; top: 0; left: 0; height: 6px; background: var(--tiktok-cyan); width: 0%; border-radius: 15px 15px 0 0; }
 
-        /* Overlay Mesajları (3-2-1, Şampiyon vb.) */
-        #box-msg { display: block; font-size: 20px; text-align: center; margin-top: 15px; }
+        #box-msg { display: block; font-size: 18px; text-align: center; margin-top: 15px; color: white; }
 
         /* Sabit Alt Paneller */
         .entry-info { width: 90%; margin-top: 15px; padding: 10px 0; background: rgba(255, 0, 80, 0.15); border-radius: 10px; border: 1px solid var(--tiktok-pink); font-size: 16px; color: var(--gold); text-align: center; }
@@ -71,7 +74,7 @@
             <div class="timer-bar" id="timer"></div>
             
             <div id="box-ui">
-                <div class="box-logo" id="logo-icon">QUIZ</div>
+                <img src="logo.png" class="box-logo-img" alt="Logo">
                 <div id="box-msg">YARIŞMACI BEKLENİYOR...</div>
             </div>
 
@@ -101,7 +104,6 @@
         const boxMsg = document.getElementById('box-msg');
         const timerBar = document.getElementById('timer');
 
-        // Geri Sayım ve Başlama
         socket.on('startCountdown', () => {
             qContent.style.display = 'none';
             boxUI.style.display = 'flex';
