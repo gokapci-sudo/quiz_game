@@ -14,6 +14,7 @@
         .game-container { display: flex; width: 95%; margin-top: 15px; justify-content: space-between; align-items: flex-start; }
         .gift-guide { width: 75px; background: rgba(255,255,255,0.05); padding: 10px 0; border-radius: 15px; border: 2px solid var(--gold); }
         .guide-item { padding: 8px 0; display: flex; flex-direction: column; align-items: center; }
+        .guide-item img { width: 35px; height: 35px; object-fit: contain; margin-bottom: 3px; }
         .guide-divider { height: 1px; width: 70%; background: rgba(253, 203, 110, 0.4); margin: 0 auto; }
 
         /* --- SARI OKLU DİNAMİK KUTU --- */
@@ -50,7 +51,8 @@
         #box-msg { display: block; font-size: 18px; text-align: center; margin-top: 15px; color: white; }
 
         /* Sabit Alt Paneller */
-        .entry-info { width: 90%; margin-top: 15px; padding: 10px 0; background: rgba(255, 0, 80, 0.15); border-radius: 10px; border: 1px solid var(--tiktok-pink); font-size: 16px; color: var(--gold); text-align: center; }
+        .entry-info { width: 90%; margin-top: 15px; padding: 10px 0; background: rgba(255, 0, 80, 0.15); border-radius: 10px; border: 1px solid var(--tiktok-pink); font-size: 16px; color: var(--gold); text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
+        .entry-info img { width: 25px; height: 25px; object-fit: contain; }
         .winners-panel { width: 90%; margin-top: 10px; background: rgba(108, 92, 231, 0.2); padding: 10px; border-radius: 12px; border: 1px solid #6c5ce7; }
         .winners-grid { display: grid; grid-template-columns: 1fr 1fr; font-size: 12px; gap: 4px; }
     </style>
@@ -64,10 +66,10 @@
 
     <div class="game-container">
         <div class="gift-guide">
-            <div class="guide-item"><span>🌹</span> A</div><div class="guide-divider"></div>
-            <div class="guide-item"><span>💖</span> B</div><div class="guide-divider"></div>
-            <div class="guide-item"><span>🍦</span> C</div><div class="guide-divider"></div>
-            <div class="guide-item"><span>⚡</span> D</div>
+            <div class="guide-item"><img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/eba3a9bb85c33e017f3648eaf88d7189~tplv-obj.webp" alt="Gül"> A</div><div class="guide-divider"></div>
+            <div class="guide-item"><img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/802a21ae29f9fae5abe3693de9f874bd~tplv-obj.webp" alt="Kalp"> B</div><div class="guide-divider"></div>
+            <div class="guide-item"><img src="https://p16-webcast.tiktokcdn.com/img/alisg/webcast-sg/resource/fc549cf1bc61f9c8a1c97ebab68dced7.png~tplv-obj.webp" alt="Dondurma"> C</div><div class="guide-divider"></div>
+            <div class="guide-item"><img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/3f02fa9594bd1495ff4e8aa5ae265eef~tplv-obj.webp" alt="Şimşek"> D</div>
         </div>
 
         <div class="question-box" id="main-box">
@@ -90,7 +92,10 @@
         </div>
     </div>
 
-    <div class="entry-info">🍵 = GİRİŞ (50) | Ödül: Son Gönderiye 100 Beğeni ❤️</div>
+    <div class="entry-info">
+        <img src="https://p16-webcast.tiktokcdn.com/img/maliva/webcast-va/4e7ad6bdf0a1d860c538f38026d4e812~tplv-obj.webp" alt="Çay"> = GİRİŞ (50) | Ödül: Son Gönderiye 100 Beğeni ❤️
+    </div>
+    
     <div class="winners-panel">
         <div style="font-size: 12px; color: var(--gold); margin-bottom: 5px; font-weight: bold;">🏆 GÜNÜN KAZANANLARI (7+)</div>
         <div class="winners-grid" id="winners-list"></div>
