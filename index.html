@@ -53,8 +53,19 @@
         /* Sabit Alt Paneller */
         .entry-info { width: 90%; margin-top: 15px; padding: 10px 0; background: rgba(255, 0, 80, 0.15); border-radius: 10px; border: 1px solid var(--tiktok-pink); font-size: 16px; color: var(--gold); text-align: center; display: flex; align-items: center; justify-content: center; gap: 8px; }
         .entry-info img { width: 25px; height: 25px; object-fit: contain; }
-        .winners-panel { width: 90%; margin-top: 10px; background: rgba(108, 92, 231, 0.2); padding: 10px; border-radius: 12px; border: 1px solid #6c5ce7; }
-        .winners-grid { display: grid; grid-template-columns: 1fr 1fr; font-size: 12px; gap: 4px; }
+
+        /* --- GÜNCELLENEN KAYAN YAZI BANDI --- */
+        .winners-panel { 
+            position: fixed; bottom: 0; left: 0; width: 100%;
+            background: rgba(108, 92, 231, 0.9); padding: 12px 0; 
+            border-top: 2px solid #6c5ce7; overflow: hidden; white-space: nowrap;
+        }
+        #winner-list { 
+            display: inline-block; padding-left: 100%; 
+            animation: ticker 25s linear infinite; 
+            font-size: 18px; color: #fff; font-weight: bold;
+        }
+        @keyframes ticker { 0% { transform: translate(0, 0); } 100% { transform: translate(-100%, 0); } }
     </style>
 </head>
 <body>
@@ -97,8 +108,7 @@
     </div>
     
     <div class="winners-panel">
-        <div style="font-size: 12px; color: var(--gold); margin-bottom: 5px; font-weight: bold;">🏆 GÜNÜN KAZANANLARI (7+)</div>
-        <div class="winners-grid" id="winners-list"></div>
+        <div id="winner-list">🏆 GÜNÜN ŞAMPİYONLARI: Henüz kazanan yok...</div>
     </div>
 
     <script src="/socket.io/socket.io.js"></script>
@@ -108,8 +118,13 @@
         const qContent = document.getElementById('q-content');
         const boxMsg = document.getElementById('box-msg');
         const timerBar = document.getElementById('timer');
+        const pNameDiv = document.getElementById('p-name');
+        const scoreDiv = document.getElementById('score-bar');
+        const winnerListDiv = document.getElementById('winner-list');
 
-        socket.on('startCountdown', () => {
+        socket.on('startCountdown', (data) => {
+            pNameDiv.innerText = "👤 Yarışmacı: " + data.name;
+            scoreDiv.innerText = "Doğru: 0 / 10";
             qContent.style.display = 'none';
             boxUI.style.display = 'flex';
             let count = 3;
@@ -141,6 +156,10 @@
             }, 50);
         });
 
+        socket.on('updateScore', (data) => {
+            scoreDiv.innerText = "Doğru: " + data.score + " / 10";
+        });
+
         socket.on('revealAnswer', (correctLetter) => {
             document.getElementById('opt-' + correctLetter).classList.add('correct');
         });
@@ -148,13 +167,21 @@
         socket.on('showBoxResult', (data) => {
             qContent.style.display = 'none';
             boxUI.style.display = 'flex';
-            boxMsg.innerHTML = data.score >= 7 ? "🎉 ŞAMPİYON!<br>Beğeniler Yolda" : "😔 ÜZGÜNÜM<br>Tekrar Dene";
+            boxMsg.innerHTML = data.score >= 7 ? "🎉 ŞAMPİYON!<br>Beğeniler Yolda" : "😔 ÜZGÜNÜM<br>Skor: " + data.score;
         });
 
         socket.on('waitingMode', () => {
+            pNameDiv.innerText = "👤 Yarışmacı: BEKLENİYOR";
             qContent.style.display = 'none';
             boxUI.style.display = 'flex';
             boxMsg.innerText = "YARIŞMACI BEKLENİYOR...";
+        });
+
+        // Kazananlar listesini alttan kaydıran kısım
+        socket.on('updateWinners', (winners) => {
+            if(winners && winners.length > 0) {
+                winnerListDiv.innerHTML = "🏆 GÜNÜN ŞAMPİYONLARI: " + winners.map(n => `⭐ ${n}`).join(' &nbsp;&nbsp;&nbsp; ');
+            }
         });
     </script>
 </body>
