@@ -38,7 +38,7 @@ let timerId = null;
 let currentCorrectAnswer = null;
 
 const GIFT_MAP = { "5655": "A", "6059": "B", "5269": "C", "6056": "D", "Rose": "A", "TikTok": "B", "I Love You": "C", "GG": "D" };
-const ENTRY_GIFT_ID = "5487";
+const ENTRY_GIFT_ID = "6054";
 
 app.use(express.static(__dirname));
 
@@ -47,7 +47,7 @@ tiktokConn.connect().then(() => console.log("TikTok Bağlantısı Başarılı!")
 
 tiktokConn.on('gift', (data) => {
     const giftId = data.giftId.toString();
-    if ((giftId === ENTRY_GIFT_ID || data.giftName === 'Donut') && data.repeatCount >= ENTRY_COST) {
+    if ((giftId === ENTRY_GIFT_ID || data.giftName === 'finger') && data.repeatCount >= ENTRY_COST) {
         addUserToQueue(data.uniqueId);
     }
     if (gameActive && data.uniqueId === currentPlayer) {
